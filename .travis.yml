@@ -11,6 +11,6 @@ before_install:
 script:
 - swiftformat --lint --verbose .
 - swiftlint
-- xcodebuild test -enableCodeCoverage YES -scheme JavaScriptSwift
+- xcodebuild test -enableCodeCoverage YES -scheme JavaScriptSwift-Package
 after_success:
 - bash <(curl -s https://codecov.io/bash)
