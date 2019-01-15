@@ -111,6 +111,6 @@ final class JavaScriptSwiftTests: XCTestCase {
     static var allTests = [
         ("testHelpers", testHelpers),
         ("testArrayAccessAndDynamicMemberLookup", testArrayAccessAndDynamicMemberLookup),
-        ("testDynamicCallable", testDynamicCallable)
+        ("testDynamicCallable", testDynamicCallable),
     ]
 }
