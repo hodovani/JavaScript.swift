@@ -33,6 +33,16 @@ public final class JavaScriptSwift {
         //        if let exception = context.exception { throw Error(exception) }
         return value
     }
+    
+    @discardableResult
+    public func `import`(_ script: String) -> JSValue {
+        if let value = try JSValue(context.evaluateScript(script)) else {
+throw Error
+        }
+        // TODO: add error handler
+//        if let exception = context.exception { throw "Error" }
+        return value
+    }
 
     @discardableResult
     public func `import`(_ url: URL) throws -> JSValue {
