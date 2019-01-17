@@ -55,7 +55,8 @@ final class JavaScriptSwiftTests: XCTestCase {
     }
 
     func testArrayAccessAndDynamicMemberLookup() throws {
-        try JavaScriptSwift.import("""
+        let context = JavaScriptSwift()
+        try context.import("""
         var conference = {
             name: "Swift Island",
             organizers: [
@@ -73,18 +74,19 @@ final class JavaScriptSwiftTests: XCTestCase {
         };
         """)
 
-        let conference = JavaScriptSwift.context.conference
+        var conference = context.conference
         XCTAssertEqual(conference.name, "Swift Island")
         XCTAssertEqual(conference.organizers[0].name, "Niels")
         conference.organizers[0].name = "Niels van Hoorn"
         XCTAssertEqual(conference.organizers[0].name, "Niels van Hoorn")
 
-        JavaScriptSwift.context.conference = "Overriding global scope object!"
-        XCTAssertEqual(JavaScriptSwift.context.conference, "Overriding global scope object!")
+        context.conference = "Overriding global scope object!"
+        XCTAssertEqual(context.conference, "Overriding global scope object!")
     }
 
     func testDynamicCallable() throws {
-        try JavaScriptSwift.import("""
+        let context = JavaScriptSwift()
+        try context.import("""
         var adder = function () {
             var total = 0;
             return {
@@ -98,7 +100,7 @@ final class JavaScriptSwiftTests: XCTestCase {
         }();
         """)
 
-        let adder = JavaScriptSwift.context.adder
+        let adder = context.adder
         XCTAssertEqual(try adder.getTotal(), 0)
         try adder.add(40)
         XCTAssertEqual(try adder.getTotal(), 40)

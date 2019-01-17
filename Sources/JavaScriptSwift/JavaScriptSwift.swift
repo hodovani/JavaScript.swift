@@ -2,15 +2,19 @@ import JavaScriptCore
 
 @dynamicMemberLookup
 public final class JavaScriptSwift {
+    fileprivate var context = JSContext()!
+
     public enum Error: Swift.Error {
         case notAFunction
     }
 
-    public static let context = JavaScriptSwift()
-    fileprivate let context = JSContext()!
+    /// Initializes `self` with separete context.
+    public init() {
+        context = JSContext()!
+    }
 
     var exception: JavaScriptException? {
-        if let exception = context.exception {
+        if let exception = self.context.exception {
             let object = JSValue(exception)
             return JavaScriptException(
                 message: object.message.string!,
@@ -23,21 +27,22 @@ public final class JavaScriptSwift {
     }
 
     @discardableResult
-    public static func `import`(_ script: String) throws -> JSValue {
-        let value = JSValue(context.context.evaluateScript(script))
-        if let exception = context.exception { throw exception }
+    public func `import`(_ script: String) throws -> JSValue {
+        let value = JSValue(context.evaluateScript(script))
+        // TODO: add error handler
+        //        if let exception = context.exception { throw Error(exception) }
         return value
     }
 
     @discardableResult
-    public static func `import`(_ url: URL) throws -> JSValue {
+    public func `import`(_ url: URL) throws -> JSValue {
         return try `import`(String(contentsOf: url))
     }
 }
 
 @dynamicCallable
 @dynamicMemberLookup
-public final class JSValue {
+public struct JSValue {
     internal let value: JavaScriptCore.JSValue
 
     fileprivate init(_ value: JavaScriptCore.JSValue) {
@@ -100,32 +105,32 @@ public extension JSValue {
 }
 
 extension JSValue: ExpressibleByNilLiteral {
-    public convenience init(nilLiteral _: ()) {
-        self.init(.init(nullIn: JavaScriptSwift.context.context))
+    public init(nilLiteral _: ()) {
+        self.init(.init(nullIn: JSContext()))
     }
 }
 
 extension JSValue: ExpressibleByBooleanLiteral {
-    public convenience init(booleanLiteral value: Bool) {
-        self.init(.init(bool: value, in: JavaScriptSwift.context.context))
+    public init(booleanLiteral value: Bool) {
+        self.init(.init(bool: value, in: JSContext()))
     }
 }
 
 extension JSValue: ExpressibleByIntegerLiteral {
-    public convenience init(integerLiteral value: Int32) {
-        self.init(.init(int32: value, in: JavaScriptSwift.context.context))
+    public init(integerLiteral value: Int32) {
+        self.init(.init(int32: value, in: JSContext()))
     }
 }
 
 extension JSValue: ExpressibleByFloatLiteral {
-    public convenience init(floatLiteral value: Double) {
-        self.init(.init(double: value, in: JavaScriptSwift.context.context))
+    public init(floatLiteral value: Double) {
+        self.init(.init(double: value, in: JSContext()))
     }
 }
 
 extension JSValue: ExpressibleByStringLiteral {
-    public convenience init(stringLiteral value: String) {
-        self.init(.init(object: value, in: JavaScriptSwift.context.context))
+    public init(stringLiteral value: String) {
+        self.init(.init(object: value, in: JSContext()))
     }
 }
 
@@ -180,10 +185,10 @@ public extension JSValue {
         guard let returnValue = value.call(withArguments: values) else {
             throw JavaScriptSwift.Error.notAFunction
         }
-
-        if let exception = JavaScriptSwift.context.exception {
-            throw exception
-        }
+//        add exception catch
+//        if let exception = JavaScriptSwift.context.exception {
+//            throw exception
+//        }
 
         return JSValue(returnValue)
     }
