@@ -165,6 +165,12 @@ extension Value: CustomStringConvertible {
     }
 }
 
+extension Value {
+    public init(object: Any) {
+        self.init(.init(object: object, in: JSContext()))
+    }
+}
+
 public extension JavaScriptSwift {
     subscript(dynamicMember member: String) -> Value {
         get {

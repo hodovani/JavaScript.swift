@@ -137,21 +137,17 @@ final class JavaScriptSwiftTests: XCTestCase {
     }
     
     func testPassSwiftClosureToJavaScript() throws {
-        
-//        func mkGreeter(greeting: String) -> (String) -> () {
-//            return { name in print("\(greeting) \(name)") }
-//        }
-        
         let context = JavaScriptSwift()
-        
+
         let simplifyString: @convention(block) (String) -> String = { input in
-            let result = input.lowercased()
+            let result  = "__\(input)__"
             return result
         }
-        context.setObject(unsafeBitCast(simplifyString, to: AnyObject.self), forKeyedSubscript: "simplifyString" as (NSCopying & NSObjectProtocol))
+        context.simplifyString = Value(object: simplifyString)
         print("")
         print("Result:")
-        print(try context.evaluateScript("simplifyString('LoVerCaSe')"))
+                print(try context.evaluateScript("1+2"))
+        print(context.import("simplifyString('LoVerCaSe')"))
         print("")
 //        let value: Value = Value(mkGreeter(greeting: "Hello"))
 //
