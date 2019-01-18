@@ -3,7 +3,7 @@ import XCTest
 
 final class JavaScriptSwiftTests: XCTestCase {
     func testHelpers() throws {
-        var value: JSValue = nil
+        var value: Value = nil
         XCTAssertTrue(value.isNull)
         XCTAssertFalse(value.isBool)
         XCTAssertFalse(value.isNumber)
@@ -56,7 +56,7 @@ final class JavaScriptSwiftTests: XCTestCase {
 
     func testArrayAccessAndDynamicMemberLookup() throws {
         let context = JavaScriptSwift()
-        try context.import("""
+        try context.importSafe("""
         var conference = {
             name: "Swift Island",
             organizers: [
@@ -86,7 +86,7 @@ final class JavaScriptSwiftTests: XCTestCase {
 
     func testDynamicCallable() throws {
         let context = JavaScriptSwift()
-        try context.import("""
+        try context.importSafe("""
         var adder = function () {
             var total = 0;
             return {
@@ -108,6 +108,61 @@ final class JavaScriptSwiftTests: XCTestCase {
         XCTAssertEqual(try adder.getTotal(), 42)
 
         XCTAssertThrowsError(try adder(), "should throw that adder is not a function")
+    }
+    
+    func testPassSwiftValueToJSFunction() throws {
+        let context = JavaScriptSwift()
+        context.import("""
+        var adder = function () {
+            var total = 0;
+            return {
+                getTotal: function () {
+                    return total;
+                },
+                add: function (value) {
+                    total += value;
+                }
+            };
+        }();
+        """)
+        
+        let adder = context.adder
+        XCTAssertEqual(try adder.getTotal(), 0)
+        try adder.add(40)
+        XCTAssertEqual(try adder.getTotal(), 40)
+        try adder.add(2)
+        XCTAssertEqual(try adder.getTotal(), 42)
+        
+        XCTAssertThrowsError(try adder(), "should throw that adder is not a function")
+    }
+    
+    func testPassSwiftClosureToJavaScript() throws {
+        
+//        func mkGreeter(greeting: String) -> (String) -> () {
+//            return { name in print("\(greeting) \(name)") }
+//        }
+        
+        let context = JavaScriptSwift()
+        
+        let simplifyString: @convention(block) (String) -> String = { input in
+            let result = input.lowercased()
+            return result
+        }
+        context.setObject(unsafeBitCast(simplifyString, to: AnyObject.self), forKeyedSubscript: "simplifyString" as (NSCopying & NSObjectProtocol))
+        print("")
+        print("Result:")
+        print(try context.evaluateScript("simplifyString('LoVerCaSe')"))
+        print("")
+//        let value: Value = Value(mkGreeter(greeting: "Hello"))
+//
+//        let adder = context.adder
+//        XCTAssertEqual(try adder.getTotal(), 0)
+//        try adder.add(40)
+//        XCTAssertEqual(try adder.getTotal(), 40)
+//        try adder.add(2)
+//        XCTAssertEqual(try adder.getTotal(), 42)
+        
+//        XCTAssertThrowsError(try adder(), "should throw that adder is not a function")
     }
 
     static var allTests = [

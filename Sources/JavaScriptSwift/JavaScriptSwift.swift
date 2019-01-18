@@ -6,6 +6,7 @@ public final class JavaScriptSwift {
 
     public enum Error: Swift.Error {
         case notAFunction
+        case exception(String)
     }
 
     /// Initializes `self` with separete context.
@@ -15,7 +16,7 @@ public final class JavaScriptSwift {
 
     var exception: JavaScriptException? {
         if let exception = self.context.exception {
-            let object = JSValue(exception)
+            let object = Value(exception)
             return JavaScriptException(
                 message: object.message.string!,
                 line: object.line.int,
@@ -27,32 +28,40 @@ public final class JavaScriptSwift {
     }
 
     @discardableResult
-    public func `import`(_ script: String) throws -> JSValue {
-        let value = JSValue(context.evaluateScript(script))
-        // TODO: add error handler
-        //        if let exception = context.exception { throw Error(exception) }
+    public func importSafe(_ script: String) throws -> Value {
+        let value = Value(context.evaluateScript(script))
+        
+        if let exception = context.exception {
+            throw Error.exception(exception.toString())
+        }
+        
         return value
     }
     
     @discardableResult
-    public func `import`(_ script: String) -> JSValue {
-        if let value = try JSValue(context.evaluateScript(script)) else {
-throw Error
+    public func `import`(_ script: String) -> Value {
+        let value = Value(context.evaluateScript(script))
+        
+        if let exception = context.exception {
+            fatalError(exception.toString())
         }
-        // TODO: add error handler
-//        if let exception = context.exception { throw "Error" }
+        
         return value
     }
-
+    
     @discardableResult
-    public func `import`(_ url: URL) throws -> JSValue {
+    public func importSafe(_ url: URL) throws -> Value {
         return try `import`(String(contentsOf: url))
+    }
+    
+    public func setObject(_ object: Any!, forKeyedSubscript key: (NSCopying & NSObjectProtocol)!)  {
+        self.context.setObject(object, forKeyedSubscript: key)
     }
 }
 
 @dynamicCallable
 @dynamicMemberLookup
-public struct JSValue {
+public struct Value {
     internal let value: JavaScriptCore.JSValue
 
     fileprivate init(_ value: JavaScriptCore.JSValue) {
@@ -76,7 +85,7 @@ struct JavaScriptException: Error, CustomStringConvertible, CustomDebugStringCon
     }
 }
 
-public extension JSValue {
+public extension Value {
     var isUndefined: Bool {
         return value.isUndefined
     }
@@ -114,52 +123,52 @@ public extension JSValue {
     }
 }
 
-extension JSValue: ExpressibleByNilLiteral {
+extension Value: ExpressibleByNilLiteral {
     public init(nilLiteral _: ()) {
         self.init(.init(nullIn: JSContext()))
     }
 }
 
-extension JSValue: ExpressibleByBooleanLiteral {
+extension Value: ExpressibleByBooleanLiteral {
     public init(booleanLiteral value: Bool) {
         self.init(.init(bool: value, in: JSContext()))
     }
 }
 
-extension JSValue: ExpressibleByIntegerLiteral {
+extension Value: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int32) {
         self.init(.init(int32: value, in: JSContext()))
     }
 }
 
-extension JSValue: ExpressibleByFloatLiteral {
+extension Value: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
         self.init(.init(double: value, in: JSContext()))
     }
 }
 
-extension JSValue: ExpressibleByStringLiteral {
+extension Value: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         self.init(.init(object: value, in: JSContext()))
     }
 }
 
-extension JSValue: Equatable {
-    public static func == (lhs: JSValue, rhs: JSValue) -> Bool {
+extension Value: Equatable {
+    public static func == (lhs: Value, rhs: Value) -> Bool {
         return lhs.value.isEqualWithTypeCoercion(to: rhs.value)
     }
 }
 
-extension JSValue: CustomStringConvertible {
+extension Value: CustomStringConvertible {
     public var description: String {
         return value.toString()
     }
 }
 
 public extension JavaScriptSwift {
-    subscript(dynamicMember member: String) -> JSValue {
+    subscript(dynamicMember member: String) -> Value {
         get {
-            return JSValue(context.objectForKeyedSubscript(member))
+            return Value(context.objectForKeyedSubscript(member))
         }
         set {
             context.setObject(newValue.value, forKeyedSubscript: member as NSString)
@@ -167,19 +176,19 @@ public extension JavaScriptSwift {
     }
 }
 
-public extension JSValue {
-    subscript(index: Int) -> JSValue {
+public extension Value {
+    subscript(index: Int) -> Value {
         get {
-            return JSValue(value.atIndex(index))
+            return Value(value.atIndex(index))
         }
         set {
             value.setValue(newValue.value, at: index)
         }
     }
 
-    subscript(dynamicMember member: String) -> JSValue {
+    subscript(dynamicMember member: String) -> Value {
         get {
-            return JSValue(value.forProperty(member)!)
+            return Value(value.forProperty(member)!)
         }
         set {
             value.setValue(newValue.value, forProperty: member)
@@ -187,9 +196,9 @@ public extension JSValue {
     }
 }
 
-public extension JSValue {
+public extension Value {
     @discardableResult
-    func dynamicallyCall(withArguments arguments: [JSValue]) throws -> JSValue {
+    func dynamicallyCall(withArguments arguments: [Value]) throws -> Value {
         let values = arguments.map({ $0.value })
 
         guard let returnValue = value.call(withArguments: values) else {
@@ -200,6 +209,6 @@ public extension JSValue {
 //            throw exception
 //        }
 
-        return JSValue(returnValue)
+        return Value(returnValue)
     }
 }
