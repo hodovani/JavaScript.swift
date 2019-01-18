@@ -109,8 +109,8 @@ final class JavaScriptSwiftTests: XCTestCase {
 
         XCTAssertThrowsError(try adder(), "should throw that adder is not a function")
     }
-    
-    func testPassSwiftValueToJSFunction() throws {
+
+    func testPassSwiftValueToJavaScriptFunction() throws {
         let context = JavaScriptSwift()
         context.import("""
         var adder = function () {
@@ -125,45 +125,33 @@ final class JavaScriptSwiftTests: XCTestCase {
             };
         }();
         """)
-        
+
         let adder = context.adder
         XCTAssertEqual(try adder.getTotal(), 0)
         try adder.add(40)
         XCTAssertEqual(try adder.getTotal(), 40)
         try adder.add(2)
         XCTAssertEqual(try adder.getTotal(), 42)
-        
+
         XCTAssertThrowsError(try adder(), "should throw that adder is not a function")
     }
-    
+
     func testPassSwiftClosureToJavaScript() throws {
         let context = JavaScriptSwift()
 
-        let simplifyString: @convention(block) (String) -> String = { input in
-            let result  = "__\(input)__"
+        let lowerCaseString: @convention(block) (String) -> String = { input in
+            let result = input.lowercased()
             return result
         }
-        context.simplifyString = Value(object: simplifyString)
-        print("")
-        print("Result:")
-                print(try context.evaluateScript("1+2"))
-        print(context.import("simplifyString('LoVerCaSe')"))
-        print("")
-//        let value: Value = Value(mkGreeter(greeting: "Hello"))
-//
-//        let adder = context.adder
-//        XCTAssertEqual(try adder.getTotal(), 0)
-//        try adder.add(40)
-//        XCTAssertEqual(try adder.getTotal(), 40)
-//        try adder.add(2)
-//        XCTAssertEqual(try adder.getTotal(), 42)
-        
-//        XCTAssertThrowsError(try adder(), "should throw that adder is not a function")
+        context.lowerCaseString = Value(object: lowerCaseString)
+        XCTAssertEqual(context.import("lowerCaseString('lowerCaseString')"), "lowercasestring")
     }
 
     static var allTests = [
         ("testHelpers", testHelpers),
         ("testArrayAccessAndDynamicMemberLookup", testArrayAccessAndDynamicMemberLookup),
         ("testDynamicCallable", testDynamicCallable),
+        ("testPassSwiftValueToJavaScriptFunction", testPassSwiftValueToJavaScriptFunction),
+        ("testPassSwiftClosureToJavaScript", testPassSwiftClosureToJavaScript)
     ]
 }

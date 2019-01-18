@@ -30,32 +30,32 @@ public final class JavaScriptSwift {
     @discardableResult
     public func importSafe(_ script: String) throws -> Value {
         let value = Value(context.evaluateScript(script))
-        
+
         if let exception = context.exception {
             throw Error.exception(exception.toString())
         }
-        
+
         return value
     }
-    
+
     @discardableResult
     public func `import`(_ script: String) -> Value {
         let value = Value(context.evaluateScript(script))
-        
+
         if let exception = context.exception {
             fatalError(exception.toString())
         }
-        
+
         return value
     }
-    
+
     @discardableResult
     public func importSafe(_ url: URL) throws -> Value {
         return try `import`(String(contentsOf: url))
     }
-    
-    public func setObject(_ object: Any!, forKeyedSubscript key: (NSCopying & NSObjectProtocol)!)  {
-        self.context.setObject(object, forKeyedSubscript: key)
+
+    public func setObject(_ object: Any!, forKeyedSubscript key: (NSCopying & NSObjectProtocol)!) {
+        context.setObject(object, forKeyedSubscript: key)
     }
 }
 
