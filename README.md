@@ -27,14 +27,14 @@ var swiftLib = {
     ]
 };
 """)
-```
+````
 
 Now you can access swiftLib fields. For example:
 
-```swift
+````swift
 var conference = context.swiftLib.name
 // conference will be "JavaScript.swift"
-```
+````
 
 ## Requirements
 
