@@ -4,8 +4,6 @@ JavaScriptSwift library to run JavaScript in pure IOS Swift
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 Use `JavaScriptSwift.import` to import JavaScript context to your project. For example:
 
 ```swift
