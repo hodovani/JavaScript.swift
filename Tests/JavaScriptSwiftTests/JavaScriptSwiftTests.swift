@@ -57,31 +57,31 @@ final class JavaScriptSwiftTests: XCTestCase {
     func testArrayAccessAndDynamicMemberLookup() throws {
         let context = JavaScriptSwift()
         try context.importSafe("""
-        var conference = {
-            name: "Swift Island",
+        var swiftLib = {
+            name: "JavaScript.swift",
             organizers: [
                 {
-                    name: "Niels",
-                    twitter: "@nvh",
-                    email: "niels@swiftisland.nl"
+                    name: "Matvii",
+                    twitter: "@hodovani",
+                    email: "matvii@hodovani.uk"
                 },
                 {
-                    name: "Sidney de Koning",
-                    twitter: "@sidneydekoning ",
-                    email: "sidney@swiftisland.nl"
+                    name: "Max",
+                    twitter: "@maxdesiatov",
+                    email: "max@desiatov.com"
                 }
             ]
         };
         """)
 
-        var conference = context.conference
-        XCTAssertEqual(conference.name, "Swift Island")
-        XCTAssertEqual(conference.organizers[0].name, "Niels")
-        conference.organizers[0].name = "Niels van Hoorn"
-        XCTAssertEqual(conference.organizers[0].name, "Niels van Hoorn")
+        var swiftLib = context.swiftLib
+        XCTAssertEqual(swiftLib.name, "JavaScript.swift")
+        XCTAssertEqual(swiftLib.organizers[0].name, "Matvii")
+        swiftLib.organizers[0].name = "Max"
+        XCTAssertEqual(swiftLib.organizers[0].name, "Max")
 
-        context.conference = "Overriding global scope object!"
-        XCTAssertEqual(context.conference, "Overriding global scope object!")
+        context.swiftLib = "Overriding global scope object!"
+        XCTAssertEqual(context.swiftLib, "Overriding global scope object!")
     }
 
     func testDynamicCallable() throws {
