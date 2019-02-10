@@ -1,8 +1,6 @@
-# JavaScriptSwift 
+# JavaScriptSwift
 
-JavaScriptSwift library to run JavaScript in pure IOS Swift 
-
-[![Build Status](https://travis-ci.com/hodovani/JavaScript.swift.svg?branch=master)](https://travis-ci.com/hodovani/JavaScript.swift)
+JavaScriptSwift library to run JavaScript in pure IOS Swift
 
 ## Example
 
@@ -32,7 +30,7 @@ var conference = {
 """)
 ```
 
-Now you can access conference fields. For example: 
+Now you can access conference fields. For example:
 
 ```swift
 let conference = JavaScriptSwift.context.conference
@@ -41,9 +39,9 @@ let conference = JavaScriptSwift.context.conference
 
 ## Requirements
 
-* Xcode 10.1
-* Swift 5.0
-* iOS 7.0+ / macOS 10.5+ / tvOS 9.0+  
+- Xcode 10.1
+- Swift 5.0
+- iOS 7.0+ / macOS 10.5+ / tvOS 9.0+
 
 ## Author
 
@@ -51,6 +49,6 @@ let conference = JavaScriptSwift.context.conference
 
 ## License
 
-JavaScriptSwift is available under the Apache 2.0 license. See the 
-[LICENSE](https://github.com/hodovani/JavaScript.swift/blob/master/LICENSE) file for 
+JavaScriptSwift is available under the Apache 2.0 license. See the
+[LICENSE](https://github.com/hodovani/JavaScript.swift/blob/master/LICENSE) file for
 more info.
