@@ -51,4 +51,3 @@ var conference = context.swiftLib.name
 JavaScriptSwift is available under the Apache 2.0 license. See the
 [LICENSE](https://github.com/hodovani/JavaScript.swift/blob/master/LICENSE) file for
 more info.
-````
