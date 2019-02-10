@@ -6,33 +6,34 @@ JavaScriptSwift library to run JavaScript in pure IOS Swift
 
 Use `JavaScriptSwift.import` to import JavaScript context to your project. For example:
 
-```swift
+````swift
 import JavaScriptSwift
 
-try JavaScriptSwift.import("""
-var conference = {
-    name: "Swift Island",
+let context = JavaScriptSwift()
+try context.importSafe("""
+var swiftLib = {
+    name: "JavaScript.swift",
     organizers: [
         {
-            name: "Niels",
-            twitter: "@nvh",
-            email: "niels@swiftisland.nl"
+            name: "Matvii",
+            twitter: "@hodovani",
+            email: "matvii@hodovani.uk"
         },
         {
-            name: "Sidney de Koning",
-            twitter: "@sidneydekoning ",
-            email: "sidney@swiftisland.nl"
+            name: "Max",
+            twitter: "@maxdesiatov",
+            email: "max@desiatov.com"
         }
     ]
 };
 """)
 ```
 
-Now you can access conference fields. For example:
+Now you can access swiftLib fields. For example:
 
 ```swift
-let conference = JavaScriptSwift.context.conference
-// conference.name -> "Swift Island"
+var conference = context.swiftLib.name
+// conference will be "JavaScript.swift"
 ```
 
 ## Requirements
@@ -50,3 +51,4 @@ let conference = JavaScriptSwift.context.conference
 JavaScriptSwift is available under the Apache 2.0 license. See the
 [LICENSE](https://github.com/hodovani/JavaScript.swift/blob/master/LICENSE) file for
 more info.
+````
