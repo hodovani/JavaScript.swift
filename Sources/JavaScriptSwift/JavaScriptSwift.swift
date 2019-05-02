@@ -154,7 +154,7 @@ extension Value: ExpressibleByStringLiteral {
 }
 
 extension Value: Equatable {
-    public static func == (lhs: Value, rhs: Value) -> Bool {
+    public static func ==(lhs: Value, rhs: Value) -> Bool {
         return lhs.value.isEqualWithTypeCoercion(to: rhs.value)
     }
 }
@@ -205,7 +205,7 @@ public extension Value {
 public extension Value {
     @discardableResult
     func dynamicallyCall(withArguments arguments: [Value]) throws -> Value {
-        let values = arguments.map({ $0.value })
+        let values = arguments.map { $0.value }
 
         guard let returnValue = value.call(withArguments: values) else {
             throw JavaScriptSwift.Error.notAFunction

@@ -152,6 +152,6 @@ final class JavaScriptSwiftTests: XCTestCase {
         ("testArrayAccessAndDynamicMemberLookup", testArrayAccessAndDynamicMemberLookup),
         ("testDynamicCallable", testDynamicCallable),
         ("testPassSwiftValueToJavaScriptFunction", testPassSwiftValueToJavaScriptFunction),
-        ("testPassSwiftClosureToJavaScript", testPassSwiftClosureToJavaScript)
+        ("testPassSwiftClosureToJavaScript", testPassSwiftClosureToJavaScript),
     ]
 }
