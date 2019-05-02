@@ -1,6 +1,8 @@
 # JavaScriptSwift
 
-JavaScriptSwift library to run JavaScript in pure IOS Swift
+JavaScriptSwift library to run JavaScript in pure iOS Swift.
+
+[![CI Status](https://img.shields.io/travis/com/hodovani/JavaScript.swift/master.svg?style=flat)](https://travis-ci.com/hodovani/JavaScript.swift)
 
 ## Example
 
