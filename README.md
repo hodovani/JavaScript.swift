@@ -31,7 +31,7 @@ var swiftLib = {
 """)
 ````
 
-Now you can access swiftLib fields. For example:
+Now you can access `swiftLib` fields. For example:
 
 ````swift
 var conference = context.swiftLib.name
