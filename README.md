@@ -38,7 +38,7 @@ var conference = context.swiftLib.name
 
 ## Requirements
 
-- Xcode 10.1
+- Xcode 10.2
 - Swift 5.0
 - iOS 7.0+ / macOS 10.5+ / tvOS 9.0+
 
