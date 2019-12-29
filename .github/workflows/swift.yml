@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build
+    - name: Build app
       run: swift build -v
     - name: Run tests
       run: swift test -v
