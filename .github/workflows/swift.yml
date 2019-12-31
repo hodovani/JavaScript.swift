@@ -12,8 +12,8 @@ jobs:
     - name: Build app
       run: swift build -v
     - name: Run tests
-      run: swift test -v
+      run: xcodebuild test -enableCodeCoverage YES -scheme JavaScriptSwift-Package
     - uses: codecov/codecov-action@v1
       with:
-        token: ${{ secrets.CODECOV_TOKEN }} #required
-        fail_ci_if_error: true #optional (default = false)
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: true
